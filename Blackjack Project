@@ -1,0 +1,97 @@
+import random
+
+cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
+
+def deal_hands(a):
+    return random.sample(cards, a)
+
+def calc_score(hands_list):
+    score = 0
+    for i in hands_list:
+        score += i
+    return score
+
+def ace_checker(hands_list):
+    if hands_list[-1] == 11:
+        if calc_score(hands_list) > 21:
+            hands_list[-1] = 1
+
+def check_scores():
+    if comp_score == 21:
+        print("BLACKJACK!! Computer WINS!")
+        return True
+    elif user_score == 21:
+        print("BLACKJACK!! You WIN!!")
+        return True
+    elif user_score > 21:
+        print("You went over. You LOSE!")
+        return True
+    elif comp_score > 21:
+        print("Computer went over. You WIN!!")
+        return True
+    return False
+
+def compare_scores():
+    if user_score > comp_score:
+        print("You WIN!")
+        return True
+    elif user_score < comp_score:
+        print("Computer WINS!")
+        return True
+    elif user_score == comp_score:
+        print("It's a tie!")
+        return True
+    return False
+
+def comp_play(hands_list):
+    while calc_score(hands_list) < 17:
+        hands_list += random.sample(cards, 1)
+    return hands_list
+
+def display_scores():
+    print(f"\nYour cards: {user_hand}  Current score: {user_score}")
+    print(f"Computer cards: [{comp_hand[0]}, x]\n")
+
+def final_scores():
+    print(f"Your final hand: {user_hand}   Final score: {user_score}")
+    print(f"Comp final hand: {comp_hand}   Final score: {comp_score}\n")
+
+start = input("Welcome to BLACKJACK! Type any letter to start Game: ").lower()
+user_hand = deal_hands(2)
+comp_hand = deal_hands(2)
+
+ace_checker(user_hand)
+ace_checker(comp_hand)
+user_score = calc_score(user_hand)
+comp_score = calc_score(comp_hand)
+display_scores()
+
+game_end = False
+while not game_end:
+    if check_scores():
+        game_end = True
+    else:
+        should_continue = True
+        while should_continue:
+            if input("Type 'y' to get another card, type 'n' to pass: ").lower() == "y":
+                user_hand += deal_hands(1)
+                ace_checker(user_hand)
+                user_score = calc_score(user_hand)
+                display_scores()
+                if check_scores():
+                    game_end = True
+                    should_continue = False
+                    break
+            else:
+                should_continue = False
+   
+   if not game_end:
+        comp_play(comp_hand)
+        ace_checker(comp_hand)
+        comp_score = calc_score(comp_hand)
+        if check_scores():
+            game_end = True
+        elif compare_scores():
+            game_end = True
+if game_end:
+    final_scores()
